@@ -1,10 +1,13 @@
 package com.guruframework.spring5recipeapp.domain;
 
+import lombok.Data;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+@Data
 @Entity
 public class UnitOfMesure {
 
@@ -13,19 +16,19 @@ public class UnitOfMesure {
     private Long Id;
     private String description;
 
+    public UnitOfMesure() {
+    }
+
     public Long getId() {
-        return Id;
+        return this.Id;
     }
 
-    public void setId(Long id) {
-        Id = id;
+    public void setId(Long Id) {
+        this.Id = Id;
     }
 
-    public String getDescription() {
-        return description;
+    protected boolean canEqual(final Object other) {
+        return other instanceof UnitOfMesure;
     }
 
-    public void setDescription(String uom) {
-        this.description = description;
-    }
 }
