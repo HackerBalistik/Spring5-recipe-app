@@ -8,4 +8,5 @@ import java.util.Set;
 @Service
 public interface RecipeService {
     Set<Recipe> RecipeList();
+    Recipe findById(Long l);
 }
