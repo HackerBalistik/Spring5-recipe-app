@@ -92,4 +92,34 @@ public class IngredientServiceImpl implements IngredientService {
                                             .findFirst().get());
         }
     }
+
+    @Override
+    public void deleteById(Long recipeId, Long idToDelete) {
+        log.debug("Deleting ingredient "+recipeId+" "+idToDelete);
+
+        Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
+        if (recipeOptional.isPresent()) {
+            Recipe recipe = recipeOptional.get();
+            log.debug("recipe found");
+
+            Optional<Ingredient> ingredientOptional = recipe
+                    .getIngredients()
+                    .stream()
+                    .filter(ingredient -> ingredient.getId().equals(idToDelete))
+                    .findFirst();
+
+            if (ingredientOptional.isPresent()){
+                log.debug("ingredient found");
+                Ingredient ingredientToDelete = ingredientOptional.get();
+                //on enlève notre recette dans les paramètre de cet ingredient
+                ingredientToDelete.setRecipe(null);
+                //et on supprime l'ingredient de la recette
+                //on annule ainsi la relation entre les deux ce qui causera la suppression de l'ingredient dans la base de donnée par hibernate
+                recipe.getIngredients().remove(ingredientOptional.get());
+                recipeRepository.save(recipe);
+            }
+        }else {
+            log.debug("recipe id "+recipeId+" not found");
+        }
+    }
 }
