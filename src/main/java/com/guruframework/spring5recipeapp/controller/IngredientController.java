@@ -7,7 +7,10 @@ import com.guruframework.spring5recipeapp.services.UnitOfMesureService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Slf4j
 @Controller
@@ -23,8 +26,7 @@ public class IngredientController {
         this.unitOfMesureService = unitOfMesureService;
     }
 
-    @GetMapping
-    @RequestMapping("/recipe/{recipeId}/ingredients")
+    @GetMapping("/recipe/{recipeId}/ingredients")
     public String ListIngredients(@PathVariable String recipeId, Model model){
         log.debug("Getting ingredients List for recipe Id :"+recipeId);
         //use command object to avoid lazy load errors in thymeleaf
@@ -32,16 +34,14 @@ public class IngredientController {
         return "/recipe/ingredients/list";
     }
 
-    @GetMapping
-    @RequestMapping("/recipe/{recipeId}/ingredients/{ingredientId}/show")
+    @GetMapping("/recipe/{recipeId}/ingredients/{ingredientId}/show")
     public String showRecipeIngredients(@PathVariable String recipeId,
                                         @PathVariable String ingredientId, Model model){
         model.addAttribute("ingredient", ingredientService.findByRecipeIdAndIngredientId(Long.valueOf(recipeId), Long.valueOf(ingredientId)));
         return "/recipe/ingredients/show";
     }
 
-    @GetMapping
-    @RequestMapping("/recipe/{recipeId}/ingredients/{ingredientId}/update")
+    @GetMapping("/recipe/{recipeId}/ingredients/{ingredientId}/update")
     public String updateRecipeIngredient(@PathVariable String recipeId,
                                @PathVariable String ingredientId, Model model){
 
@@ -62,8 +62,7 @@ public class IngredientController {
         return "redirect:/recipe/"+saveCommand.getRecipeId()+"/ingredients/"+saveCommand.getId()+"/show";
     }
 
-    @GetMapping
-    @RequestMapping("/recipe/{recipeId}/ingredients/{id}/delete")
+    @GetMapping("/recipe/{recipeId}/ingredients/{id}/delete")
     public String deleteIngredient(@PathVariable String recipeId,
                                    @PathVariable String id){
         log.debug("deleting ingredientId" +id);
