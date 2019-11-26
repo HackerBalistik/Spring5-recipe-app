@@ -3,6 +3,7 @@ package com.guruframework.spring5recipeapp.services;
 import com.guruframework.spring5recipeapp.converters.RecipeCommandToRecipe;
 import com.guruframework.spring5recipeapp.converters.RecipeToRecipeCommand;
 import com.guruframework.spring5recipeapp.domain.Recipe;
+import com.guruframework.spring5recipeapp.exception.NotFoundException;
 import com.guruframework.spring5recipeapp.repository.RecipeRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,6 +48,13 @@ public class RecipeServiceImplTest {
         assertNotNull("Null recipe returned", recipeReturned);
         verify(recipeRepository, times(1)).findById(anyLong());
         verify(recipeRepository, never()).findAll();
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void getRecipeIdTestNotFound() throws Exception{
+        Optional<Recipe> recipeOptional = Optional.empty();
+        when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
+        Recipe recipeReturned = recipeService.findById(1L);
     }
 
     @Test
