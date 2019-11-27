@@ -1,14 +1,14 @@
 package com.guruframework.spring5recipeapp.controller;
 
 import com.guruframework.spring5recipeapp.commands.RecipeCommand;
+import com.guruframework.spring5recipeapp.exception.NotFoundException;
 import com.guruframework.spring5recipeapp.services.RecipeService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 @Slf4j
 @Controller
@@ -33,6 +33,15 @@ public class RecipeController {
         model.addAttribute("recipe", recipeService.findById(Long.valueOf(id)));
 
         return "/recipe/show";
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NotFoundException.class)
+    public ModelAndView handleNotFound(){
+        log.error("Handle Not Found Exception");
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("Error404");
+        return modelAndView;
     }
 
     @GetMapping("/recipe/{id}/update")
