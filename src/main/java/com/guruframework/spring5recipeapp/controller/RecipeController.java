@@ -30,18 +30,37 @@ public class RecipeController {
 
     @GetMapping({"/recipe/{id}/show"})
     public String showById(@PathVariable String id, Model model){
+
         model.addAttribute("recipe", recipeService.findById(Long.valueOf(id)));
 
         return "/recipe/show";
     }
 
+    //On passe le mm statue que celui de notre exceotion
     @ResponseStatus(HttpStatus.NOT_FOUND)
+    //permet de lever l'exception
     @ExceptionHandler(NotFoundException.class)
     public ModelAndView handleNotFound(Exception exception){
+        //on affiche nos message dans les logs
         log.error("Handle Not Found Exception");
         log.error(exception.getMessage());
+
         ModelAndView modelAndView = new ModelAndView();
+        //on spécifie la view a afficher
         modelAndView.setViewName("Error404");
+        //on recupère le message de l'exception dans un objet qui sera passé a la view
+        modelAndView.addObject("exception", exception);
+
+        return modelAndView;
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(NumberFormatException.class)
+    public ModelAndView handleNumberFormatException(Exception exception){
+        log.error("Handle Bad Request exception");
+        log.error(exception.getMessage());
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("Error400");
         modelAndView.addObject("exception", exception);
         return modelAndView;
     }
